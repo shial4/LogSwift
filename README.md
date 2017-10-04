@@ -15,7 +15,7 @@
 </a>
 </p>
 
-SLLog is a simple swift loger yet elegant. Allows you to log to content, file or your cutom target.
+SLLog is a simple yet elegant swift logger. Allows you to log content to file, console or your custom target.
 
 
 ## 🔧 Installation

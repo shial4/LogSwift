@@ -14,7 +14,7 @@ class SLLogTests: XCTestCase {
         ]
     
     func testLogs() {
-        SLLog.addTarget(SLLogConsole())
+        SLLog.addHandler(SLLogConsole())
         XCTAssert(true)
     }
 }

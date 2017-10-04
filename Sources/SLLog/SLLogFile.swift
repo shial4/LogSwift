@@ -44,6 +44,26 @@ public class SLLogFile {
         queue.cancelAllOperations()
     }
     
+    public func addEntry(_ log: String) {
+        queue.addOperation { [weak self] in
+            guard let path = self?.filePath else { return }
+            if FileManager.default.fileExists(atPath: path),
+                let data = "\n\(log)".data(using: .utf8) {
+                if self?.fileHandle == nil {
+                    self?.fileHandle = FileHandle(forWritingAtPath: path)
+                }
+                _ = self?.fileHandle?.seekToEndOfFile()
+                self?.fileHandle?.write(data)
+            } else if let _ = try? "\(log)".write(toFile: path, atomically: true, encoding: .utf8) {
+                if let file = path.components(separatedBy: "/").last {
+                    self?.files.append(file)
+                }
+                self?.fileHandle?.closeFile()
+                self?.fileHandle = FileHandle(forWritingAtPath: path)
+            }
+        }
+    }
+    
     private class func verifyDirectory(_ path: String) throws {
         if !FileManager.default.fileExists(atPath: path) {
             try SLLogFile.createDirectory(path)
@@ -82,23 +102,7 @@ public class SLLogFile {
 }
 
 extension SLLogFile: LogHandler {
-    open func handle(log: String, level: SLLog.LogType, file: String, line: UInt, message: Any) {
-        queue.addOperation { [weak self] in
-            guard let path = self?.filePath else { return }
-            if FileManager.default.fileExists(atPath: path),
-                let data = "\n\(log)".data(using: .utf8) {
-                if self?.fileHandle == nil {
-                    self?.fileHandle = FileHandle(forWritingAtPath: path)
-                }
-                _ = self?.fileHandle?.seekToEndOfFile()
-                self?.fileHandle?.write(data)
-            } else if let _ = try? "\(log)".write(toFile: path, atomically: true, encoding: .utf8) {
-                if let file = path.components(separatedBy: "/").last {
-                    self?.files.append(file)
-                }
-                self?.fileHandle?.closeFile()
-                self?.fileHandle = FileHandle(forWritingAtPath: path)
-            }
-        }
+    open func handle(log: String, level: SLLog.LogType, spot: Occurrence, message: Any) {
+        addEntry(log)
     }
 }

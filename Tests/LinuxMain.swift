@@ -4,4 +4,5 @@ import XCTest
 XCTMain([
     testCase(SLLogTests.allTests),
     testCase(SLLogFileTests.allTests),
+    testCase(SLLogConsoleTests.allTests),
 ])

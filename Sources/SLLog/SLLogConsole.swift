@@ -8,7 +8,7 @@
 import Foundation
 
 public class SLLogConsole: LogHandler {
-    open func handle(log: String, level: SLLog.LogType, file: String, line: UInt, message: Any) {
+    open func handle(log: String, level: SLLog.LogType, spot: Occurrence, message: Any) {
         print(log)
     }
 }

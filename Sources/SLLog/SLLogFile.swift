@@ -8,10 +8,6 @@
 import Foundation
 import Dispatch
 
-enum SLLogFileError: Error {
-    case RuntimeError(String)
-}
-
 public class SLLogFile {
     private let directoryBasename = "/sllogs"
     private let fileExtension = ".log"
@@ -49,11 +45,8 @@ public class SLLogFile {
     }
     
     private class func verifyDirectory(_ path: String) throws {
-        var isDirectory: ObjCBool = false
-        if !FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory) {
+        if !FileManager.default.fileExists(atPath: path) {
             try SLLogFile.createDirectory(path)
-        } else if isDirectory.boolValue != true {
-            throw SLLogFileError.RuntimeError("Can't verify directory")
         }
     }
     

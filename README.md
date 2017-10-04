@@ -62,15 +62,15 @@ public class MyClass: LogHandler {
 
 Log your entries.
 ```swift
-SLLog.log(.debug, "ABC")
-SLLog.log(.warning, "#%^$&@")
-SLLog.log(.error, "1233")
+SLLog.debug("ABC")
+SLLog.warning("#%^$&@")
+SLLog.error("1233")
 ```
 Log Any object.
 ```swift
-SLLog.log(.debug, 11)
-SLLog.log(.warning, Date())
-SLLog.log(.error, Foo())
+SLLog.debug(11)
+SLLog.warning(Date())
+SLLog.error(Foo()
 ```
 
 ## ⭐ Contributing

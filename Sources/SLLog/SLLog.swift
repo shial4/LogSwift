@@ -46,10 +46,6 @@ public extension SLLog {
         case error = 2
     }
     
-    public class func log(_ level: SLLog.LogType, _ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        send(level: level, file: file, line: line, message: message)
-    }
-    
     public class func debug(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
         send(level: .debug, file: file, line: line, message: message)
     }

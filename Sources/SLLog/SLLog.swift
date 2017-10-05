@@ -28,6 +28,10 @@ public class SLLog {
     public class func addHandler(_ target: LogHandler...) {
         targets.append(contentsOf: target)
     }
+    
+    public class func clearHandlers() {
+        targets.removeAll()
+    }
 }
 
 public extension SLLog {

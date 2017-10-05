@@ -36,6 +36,7 @@ class SLLogFileTests: XCTestCase {
                 print(error)
             }
         }
+        SLLog.clearHandlers()
     }
     
     func testFileExists() {

@@ -13,6 +13,11 @@ class SLLogTests: XCTestCase {
         ("testLogs", testLogs),
         ]
     
+    override func tearDown() {
+        super.tearDown()
+        SLLog.clearHandlers()
+    }
+    
     func testLogs() {
         SLLog.addHandler(SLLogConsole())
         XCTAssert(true)

@@ -87,7 +87,16 @@ SLLog.w(Date())
 SLLog.e([0.1,1,"A",Date()])
 ```
 
-## 4 SLLogConsole
+### 4 Providers
+
+SLLog can have custom providers. To add your own provider 
+```swift
+struct MySLLogProvider: LogProvider {}
+SLLog.addProvider(MySLLogProvider())
+```
+can you can use `LogProvider` build in method send. To send your log via SLLog.
+
+## 5 SLLogConsole
 Default console log:
 ```swift
 isDebug: Bool = true,
@@ -126,6 +135,11 @@ SLLog.LogType.debug:LogColor("92m", "✅"),
 SLLog.LogType.warning:LogColor("93mm", "⚠️"),
 SLLog.LogType.error:LogColor("91m", "⛔️"),
 ```
+## 5 SLLogFile
+SLLogFile save logs to files which are create on daily basis.
+File names are as follows: `"yyyy-MM-dd"`. Created under `:yuorPath/sllogs` with extension `.log`
+Default `maxFilesCount` is set to `3` wich means logger stores 3 files at a time.
+1 file = 1 day logs
 
 
 ## ⭐ Contributing

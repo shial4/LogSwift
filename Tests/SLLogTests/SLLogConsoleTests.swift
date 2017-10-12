@@ -15,7 +15,7 @@ class SLLogConsoleTests: XCTestCase {
         ]
     
     func testLogs() {
-        SLLog.addHandler(SLLogConsole())
+        SLLog.addHandler(SLLogConsole(isTerminal: false))
         SLLog.v(123)
         SLLog.i("ABC")
         SLLog.d("@$#!^%")

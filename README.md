@@ -87,6 +87,47 @@ SLLog.w(Date())
 SLLog.e([0.1,1,"A",Date()])
 ```
 
+## 4 SLLogConsole
+Default console log:
+```swift
+isDebug: Bool = true,
+isTerminal: Bool = false,
+minProductionLogType: UInt = 3
+logFormat: String = ":d :t :f::l :m",
+dateFormat: String? = nil,
+logColors: [SLLog.LogType:LogColor]? = nil
+```
+Override argument passing it in initializer to variate ConsoleLog
+`SLLogConsole(isDebug: true, isTerminal: false)`
+or
+`SLLogConsole(isTerminal: false)`
+and so on.
+Use isTerminal property to choose between terminal or console settings.
+
+By default logs are set for terminal.
+log format `":d :t :f::l :m"` where
+`:d` is replace in string to display date
+`:t` is replaced by log type
+`:f` is replaced by file name
+`:l` is replaced by line number
+`:m` is replaced by message object
+
+Default date format used by logger is as follow `"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"`
+
+To ged rid of default log colors pass empty disctionary in `logColors` or dictionary with your own definitions.
+For more information about terminal color take a look: `https://misc.flogisoft.com/bash/tip_colors_and_formatting`
+### LogColor
+LogColor is defined as follow `init(_ terminal: String, _ console: String)`
+For XCode console emoticons are used as collor.
+```swift
+SLLog.LogType.verbose:LogColor("37m", "☑️"),
+SLLog.LogType.info:LogColor("34m", "Ⓜ️"),
+SLLog.LogType.debug:LogColor("92m", "✅"),
+SLLog.LogType.warning:LogColor("93mm", "⚠️"),
+SLLog.LogType.error:LogColor("91m", "⛔️"),
+```
+
+
 ## ⭐ Contributing
 
 Be welcome to contribute to this project! :)

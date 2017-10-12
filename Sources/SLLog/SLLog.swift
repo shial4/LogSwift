@@ -9,28 +9,45 @@ import Foundation
 
 public typealias Occurrence = (file: String, line: UInt)
 
+public protocol LogProvider {}
+
+extension LogProvider {
+    public func send(level: SLLog.LogType, spot: Occurrence, message: @autoclosure () -> Any) {
+        SLLog.send(level: level, spot: spot, message: message)
+    }
+}
+
 public protocol LogHandler {
     func handle(log: String, level: SLLog.LogType, spot: Occurrence, message: Any)
 }
 
 public class SLLog {
+    private static var providers: [LogProvider] = []
     private static var targets: [LogHandler] = []
     private static var dateFormat: DateFormatter = DateFormatter(dateFormat: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
                                                                  timeZone: "UTC",
                                                                  locale: "en_US_POSIX")
     
-    private class func send(level: SLLog.LogType, spot: Occurrence, message: @autoclosure () -> Any) {
+    fileprivate class func send(level: SLLog.LogType, spot: Occurrence, message: @autoclosure () -> Any) {
         let object = message()
         let log: String = "\(dateFormat.string(from: Date())) \(level) \(spot.file.split(separator: "/").last ?? ""):\(spot.line) - \(object)"
         targets.forEach { $0.handle(log:log, level: level, spot: spot, message: object) }
     }
     
     public class func addHandler(_ target: LogHandler...) {
-        targets.append(contentsOf: target)
+        self.targets.append(contentsOf: target)
     }
     
     public class func clearHandlers() {
-        targets.removeAll()
+        self.targets.removeAll()
+    }
+    
+    public class func addProvider(_ providers: LogProvider...) {
+        self.providers.append(contentsOf: providers)
+    }
+    
+    public class func clearProviders() {
+        self.providers.removeAll()
     }
 }
 

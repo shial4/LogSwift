@@ -25,6 +25,11 @@ SLLog is a simple yet elegant swift logger. Allows you to log content to file, c
 1994-06-23T15:13:00.146Z [ERROR] MyFile.swift:23 - [0.10000000000000001, 1, "A", 2017-10-04 09:55:36 +0000]
 ```
 
+<p align="center">
+<img src="Images/terminal.png" alt="Terminal" />
+<img src="Images/console.png" alt="Console" />
+</p>
+
 ## 🔧 Installation
 
 Add the following dependency to your `Package.swift` file:
@@ -129,12 +134,14 @@ For more information about terminal color take a look: `https://misc.flogisoft.c
 LogColor is defined as follow `init(_ terminal: String, _ console: String)`
 For XCode console emoticons are used as collor.
 ```swift
-SLLog.LogType.verbose:LogColor("37m", "☑️"),
-SLLog.LogType.info:LogColor("34m", "Ⓜ️"),
-SLLog.LogType.debug:LogColor("92m", "✅"),
-SLLog.LogType.warning:LogColor("93mm", "⚠️"),
-SLLog.LogType.error:LogColor("91m", "⛔️"),
+SLLog.LogType.verbose:LogColor(TerminalColor.lightGray, "☑️"),
+SLLog.LogType.info:LogColor(TerminalColor.lightCyan, "Ⓜ️"),
+SLLog.LogType.debug:LogColor(TerminalColor.lightGreen, "✅"),
+SLLog.LogType.warning:LogColor(TerminalColor.lightYellow, "⚠️"),
+SLLog.LogType.error:LogColor(TerminalColor.lightRed, "⛔️"),
 ```
+Use `TerminalColor`  to fast access predefined colors values
+
 ## 5 SLLogFile
 SLLogFile save logs to files which are create on daily basis.
 File names are as follows: `"yyyy-MM-dd"`. Created under `:yuorPath/sllogs` with extension `.log`

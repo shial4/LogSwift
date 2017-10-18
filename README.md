@@ -118,9 +118,9 @@ or
 and so on.
 Use isTerminal property to choose between terminal or console settings.
 
-By default logs are set for terminal.
+By default, logs are set for a terminal.
 log format `":d :t :f::l :m"` where
-`:d` is replace in string to display date
+`:d` is replaced in string to display date
 `:t` is replaced by log type
 `:f` is replaced by file name
 `:l` is replaced by line number
@@ -128,7 +128,7 @@ log format `":d :t :f::l :m"` where
 
 Default date format used by logger is as follow `"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"`
 
-To ged rid of default log colors pass empty disctionary in `logColors` or dictionary with your own definitions.
+To get rid of default log colors pass empty dictionary in `logColors` or dictionary with your own definitions.
 For more information about terminal color take a look: `https://misc.flogisoft.com/bash/tip_colors_and_formatting`
 ### LogColor
 LogColor is defined as follow `init(_ terminal: String, _ console: String)`
@@ -143,7 +143,7 @@ SLLog.LogType.error:LogColor(TerminalColor.lightRed, "⛔️"),
 Use `TerminalColor`  to fast access predefined colors values
 
 ## 5 SLLogFile
-SLLogFile save logs to files which are create on daily basis.
+SLLogFile save logs to files which are created on daily basis.
 File names are as follows: `"yyyy-MM-dd"`. Created under `:yuorPath/sllogs` with extension `.log`
 Default `maxFilesCount` is set to `3` wich means logger stores 3 files at a time.
 1 file = 1 day logs
@@ -160,4 +160,3 @@ You can create an issue on GitHub.
 ## 📝 License
 
 This project was released under the [MIT](LICENSE) license.
-

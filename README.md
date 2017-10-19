@@ -105,7 +105,13 @@ can you can use `LogProvider` build in method send. To send your log via SLLog.
 Default console log:
 ```swift
 isDebug: Bool = true,
-isTerminal: Bool = false,
+isTerminal: Bool = {
+        #if Xcode
+        return false
+        #else
+        return true
+        #endif
+    }(),
 minProductionLogType: UInt = 3
 logFormat: String = ":d :t :f::l :m",
 dateFormat: String? = nil,

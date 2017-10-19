@@ -38,7 +38,13 @@ public struct LogColor {
 
 public class SLLogConsole: LogHandler {
     public init(isDebug: Bool = true,
-                isTerminal: Bool = false,
+                isTerminal: Bool = {
+        #if Xcode
+            return false
+        #else
+            return true
+        #endif
+        }(),
                 minProductionLogType: UInt = 3,
                 logFormat: String = ":d :t :f::l :m",
                 dateFormat: String? = nil,

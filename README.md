@@ -46,7 +46,25 @@ On top of your file import:
 import SLLog
 ```
 
-### 2 Initialize
+### 2 Usage
+
+Log any information you need with `Log` class
+```swift
+Log.d("ABC")
+Log.w("#%^$&@")
+Log.e("1233")
+```
+Any object.
+```swift
+SLLog.addHandler(SLLogConsole())
+Log.v(123)
+Log.i("ABC")
+Log.d("@$#!^%")
+Log.w(Date())
+Log.e([0.1,1,"A",Date()])
+```
+
+### 3 Initialize
 
 Setup SLLoger
 ```swift
@@ -72,24 +90,6 @@ public class MyHandler: LogHandler {
 then add it to SLLog
 ```swift
 SLLog.addHandler(MyHandler())
-```
-
-### 3 Usage
-
-Log any information you need.
-```swift
-SLLog.d("ABC")
-SLLog.w("#%^$&@")
-SLLog.e("1233")
-```
-Any object.
-```swift
-SLLog.addHandler(SLLogConsole())
-SLLog.v(123)
-SLLog.i("ABC")
-SLLog.d("@$#!^%")
-SLLog.w(Date())
-SLLog.e([0.1,1,"A",Date()])
 ```
 
 ### 4 Providers
@@ -126,19 +126,23 @@ Use isTerminal property to choose between terminal or console settings.
 
 By default, logs are set for a terminal.
 log format `":d :t :f::l :m"` where
-`:d` is replaced in string to display date
-`:t` is replaced by log type
-`:f` is replaced by file name
-`:l` is replaced by line number
-`:m` is replaced by message object
+
+    `:d` is replaced in string to display date
+    `:t` is replaced by log type
+    `:f` is replaced by file name
+    `:l` is replaced by line number
+    `:m` is replaced by message object
 
 Default date format used by logger is as follow `"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"`
 
 To get rid of default log colors pass empty dictionary in `logColors` or dictionary with your own definitions.
 For more information about terminal color take a look: `https://misc.flogisoft.com/bash/tip_colors_and_formatting`
+
 ### LogColor
+
 LogColor is defined as follow `init(_ terminal: String, _ console: String)`
 For XCode console emoticons are used as collor.
+
 ```swift
 SLLog.LogType.verbose:LogColor(TerminalColor.lightGray, "☑️"),
 SLLog.LogType.info:LogColor(TerminalColor.lightCyan, "Ⓜ️"),

@@ -22,11 +22,11 @@ public protocol LogHandler {
 }
 
 public class SLLog {
-    private static var providers: [LogProvider] = []
-    private static var targets: [LogHandler] = []
-    private static var dateFormat: DateFormatter = DateFormatter(dateFormat: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-                                                                 timeZone: "UTC",
-                                                                 locale: "en_US_POSIX")
+    public private(set) static var providers: [LogProvider] = []
+    public private(set) static var targets: [LogHandler] = []
+    public private(set) static var dateFormat: DateFormatter = DateFormatter(dateFormat: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                                                                             timeZone: "UTC",
+                                                                             locale: "en_US_POSIX")
     
     fileprivate class func send(level: SLLog.LogType, spot: Occurrence, message: @autoclosure () -> Any) {
         let object = message()
@@ -74,24 +74,26 @@ public extension SLLog {
         case warning = 3
         case error = 4
     }
-    
+}
+
+public final class Log {
     public class func v(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        send(level: .verbose, spot: (file, line), message: message)
+        SLLog.send(level: .verbose, spot: (file, line), message: message)
     }
     
     public class func i(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        send(level: .info, spot: (file, line), message: message)
+        SLLog.send(level: .info, spot: (file, line), message: message)
     }
     
     public class func d(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        send(level: .debug, spot: (file, line), message: message)
+        SLLog.send(level: .debug, spot: (file, line), message: message)
     }
     
     public class func w(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        send(level: .warning, spot: (file, line), message: message)
+        SLLog.send(level: .warning, spot: (file, line), message: message)
     }
     
     public class func e(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        send(level: .error, spot: (file, line), message: message)
+        SLLog.send(level: .error, spot: (file, line), message: message)
     }
 }

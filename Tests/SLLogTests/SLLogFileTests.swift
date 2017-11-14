@@ -43,7 +43,7 @@ class SLLogFileTests: XCTestCase {
         let exp = expectation(description: "logToFile")
         
         SLLog.addHandler(try! SLLogFile(path))
-        SLLog.w("#%^$&@")
+        Log.w("#%^$&@")
         
         DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + 2) {
             if FileManager.default.fileExists(atPath: "\(self.path)/sllogs/\(self.dateFormat.string(from: Date())).log") {
@@ -59,9 +59,9 @@ class SLLogFileTests: XCTestCase {
         let exp = expectation(description: "logToFile")
         
         SLLog.addHandler(try! SLLogFile(path))
-        SLLog.d("ABC")
-        SLLog.w("#%^$&@")
-        SLLog.e("1233")
+        Log.d("ABC")
+        Log.w("#%^$&@")
+        Log.e("1233")
         
         DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + 6) {
             let filePath = "\(self.path)/sllogs/\(self.dateFormat.string(from: Date())).log"
@@ -89,7 +89,7 @@ class SLLogFileTests: XCTestCase {
         let exp = expectation(description: "logToFile")
         
         SLLog.addHandler(try! SLLogFile(path))
-        SLLog.w("#%^$&@")
+        Log.w("#%^$&@")
         
         DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + 6) {
             let filePath = "\(self.path)/sllogs/\(self.dateFormat.string(from: Date())).log"
@@ -158,7 +158,7 @@ class SLLogFileTests: XCTestCase {
         
         XCTAssert((try? FileManager.default.contentsOfDirectory(atPath: "\(self.path)/sllogs/"))?.count ?? 0 > 3)
         SLLog.addHandler(try! SLLogFile(path))
-        SLLog.w("test")
+        Log.w("test")
         DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + 4) {
             let count = (try? FileManager.default.contentsOfDirectory(atPath: "\(self.path)/sllogs/"))?.count ?? 0
             XCTAssertTrue(count == 4, "count: \(count)")

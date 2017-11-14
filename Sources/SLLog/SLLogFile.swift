@@ -23,7 +23,7 @@ public class SLLogFile {
         let file: String = "\(path)/\(dateFormat.string(from: Date()))\(fileExtension)"
         return file
     }
-    private var path: String {
+    public final var path: String {
         return directory + directoryBasename
     }
     private lazy var queue: OperationQueue = {

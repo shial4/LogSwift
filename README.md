@@ -123,6 +123,10 @@ or
 `SLLogConsole(isTerminal: false)`
 and so on.
 Use isTerminal property to choose between terminal or console settings.
+`SLLogConsole(isTerminal: false)`
+
+To fully configure SLLog pas `Configuration` object during initialisation.
+`public init(_ config: Configuration = Configuration())`
 
 By default, logs are set for a terminal.
 log format `":d :t :f::l :m"` where

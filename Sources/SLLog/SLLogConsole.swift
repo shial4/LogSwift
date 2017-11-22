@@ -8,23 +8,27 @@
 import Foundation
 
 public class TerminalColor {
-    class var `default`: String { return "39m" }
-    class var black: String { return "30m" }
-    class var red: String { return "31m" }
-    class var green: String { return "32m" }
-    class var yellow: String { return "33m" }
-    class var blue: String { return "34m" }
-    class var magenta: String { return "35m" }
-    class var cyan: String { return "36m" }
-    class var lightGray: String { return "37m" }
-    class var darkGray: String { return "90m" }
-    class var lightRed: String { return "91m" }
-    class var lightGreen: String { return "92m" }
-    class var lightYellow: String { return "93m" }
-    class var lightBlue: String { return "94m" }
-    class var lightMagenta: String { return "95m" }
-    class var lightCyan: String { return "96m" }
-    class var white: String { return "97m" }
+    final class var `default`: String { return "39m" }
+    final class var black: String { return "30m" }
+    final class var white: String { return "97m" }
+    final class func custom(_ value: String) -> String { return value }
+}
+
+extension TerminalColor {
+    public final class var red: String { return "31m" }
+    public final class var green: String { return "32m" }
+    public final class var yellow: String { return "33m" }
+    public final class var blue: String { return "34m" }
+    public final class var magenta: String { return "35m" }
+    public final class var cyan: String { return "36m" }
+    public final class var lightGray: String { return "37m" }
+    public final class var darkGray: String { return "90m" }
+    public final class var lightRed: String { return "91m" }
+    public final class var lightGreen: String { return "92m" }
+    public final class var lightYellow: String { return "93m" }
+    public final class var lightBlue: String { return "94m" }
+    public final class var lightMagenta: String { return "95m" }
+    public final class var lightCyan: String { return "96m" }
 }
 
 public struct LogColor {
@@ -37,41 +41,41 @@ public struct LogColor {
 }
 
 public class SLLogConsole: LogHandler {
-    public init(isDebug: Bool = true,
-                isTerminal: Bool = {
-        #if Xcode
-            return false
-        #else
-            return true
-        #endif
-        }(),
-                minProductionLogType: UInt = 3,
-                logFormat: String = ":d :t :f::l :m",
-                dateFormat: String? = nil,
-                logColors: [SLLog.LogType:LogColor]? = nil) {
-        self.isDebug = isDebug
-        self.isTerminal = isTerminal
-        self.minProductionLogType = minProductionLogType
-        self.logFormat = logFormat
-        if let format = dateFormat {
+    public struct Configuration {
+        public init() {}
+        public var mode: (isDebug: Bool, isTerminal: Bool) = {
+            #if Xcode
+                return (true, false)
+            #else
+                return (true, true)
+            #endif
+        }()
+        public var minProductionLogType: UInt = 3
+        public var logFormat: String = ":d :t :f::l :m"
+        public var dateFormat: String?
+        public var logColors: [SLLog.LogType:LogColor] = [
+            SLLog.LogType.verbose:LogColor(TerminalColor.lightGray, "☑️"),
+            SLLog.LogType.info:LogColor(TerminalColor.lightCyan, "Ⓜ️"),
+            SLLog.LogType.debug:LogColor(TerminalColor.lightGreen, "✅"),
+            SLLog.LogType.warning:LogColor(TerminalColor.lightYellow, "⚠️"),
+            SLLog.LogType.error:LogColor(TerminalColor.lightRed, "⛔️"),
+            ]
+    }
+
+    public init(_ config: Configuration = Configuration()) {
+        self.mode = config.mode
+        self.minProductionLogType = config.minProductionLogType
+        self.logFormat = config.logFormat
+        self.logColors = config.logColors
+        if let format = config.dateFormat {
             self.formattert.dateFormat = format
-        }
-        if let colors = logColors {
-            self.logColors = colors
         }
     }
     
-    public var isDebug: Bool
+    public var mode: (isDebug: Bool, isTerminal: Bool)
     public var minProductionLogType: UInt
-    public var isTerminal: Bool
     public var logFormat: String
-    public var logColors: [SLLog.LogType:LogColor] = [
-        SLLog.LogType.verbose:LogColor(TerminalColor.lightGray, "☑️"),
-        SLLog.LogType.info:LogColor(TerminalColor.lightCyan, "Ⓜ️"),
-        SLLog.LogType.debug:LogColor(TerminalColor.lightGreen, "✅"),
-        SLLog.LogType.warning:LogColor(TerminalColor.lightYellow, "⚠️"),
-        SLLog.LogType.error:LogColor(TerminalColor.lightRed, "⛔️"),
-    ]
+    public var logColors: [SLLog.LogType:LogColor]
     
     private var formattert: DateFormatter = DateFormatter(dateFormat: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
                                                                  timeZone: "UTC",
@@ -81,7 +85,7 @@ public class SLLogConsole: LogHandler {
         guard let c = color else {
             return text
         }
-        if isTerminal {
+        if mode.isTerminal {
             return "\u{001b}[" + c.terminalColor + text + "\u{001b}[0m"
         } else {
             return "\(c.consolColor) " + text
@@ -89,11 +93,26 @@ public class SLLogConsole: LogHandler {
     }
     
     open func handle(log: String, level: SLLog.LogType, spot: Occurrence, message: Any) {
-        guard isDebug || level.rawValue >= minProductionLogType else { return }
+        guard mode.isDebug || level.rawValue >= minProductionLogType else { return }
         print(logFormat.replacingOccurrences(of: ":d", with: formattert.string(from: Date()))
         .replacingOccurrences(of: ":t", with: applayColors(logColors[level], text: "\(level)"))
         .replacingOccurrences(of: ":f", with: "\(spot.file.split(separator: "/").last ?? "")")
         .replacingOccurrences(of: ":l", with: "\(spot.line)")
         .replacingOccurrences(of: ":m", with: "\(message)"))
+    }
+}
+
+extension SLLogConsole {
+    public convenience init(isTerminal: Bool) {
+        self.init()
+        self.mode.isTerminal = isTerminal
+    }
+    public convenience init(isDebug: Bool) {
+        self.init()
+        self.mode.isDebug = isDebug
+    }
+    public convenience init(isDebug: Bool, isTerminal: Bool) {
+        self.init()
+        self.mode = (isDebug, isTerminal)
     }
 }

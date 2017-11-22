@@ -34,7 +34,7 @@ SLLog is a simple yet elegant swift logger. Allows you to log content to file, c
 
 Add the following dependency to your `Package.swift` file:
 ```swift
-.package(url: "https://github.com/shial4/SLLog.git", from: "1.0.0"),
+.package(url: "https://github.com/SLLog/SLLog", from: "1.0.0"),
 ```
 
 ## 💊 How To Start

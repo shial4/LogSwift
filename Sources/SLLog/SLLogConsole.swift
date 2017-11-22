@@ -51,8 +51,7 @@ public class SLLogConsole: LogHandler {
             #endif
         }()
         public var minProductionLogType: UInt = 3
-        public var logFormat: String = ":d :t :f::l :m"
-        public var dateFormat: String?
+        public var format: (logFormat: String, dateFormat: String?) = (":d :t :f::l :m", nil)
         public var logColors: [SLLog.LogType:LogColor] = [
             SLLog.LogType.verbose:LogColor(TerminalColor.lightGray, "☑️"),
             SLLog.LogType.info:LogColor(TerminalColor.lightCyan, "Ⓜ️"),
@@ -65,9 +64,9 @@ public class SLLogConsole: LogHandler {
     public init(_ config: Configuration = Configuration()) {
         self.mode = config.mode
         self.minProductionLogType = config.minProductionLogType
-        self.logFormat = config.logFormat
+        self.logFormat = config.format.logFormat
         self.logColors = config.logColors
-        if let format = config.dateFormat {
+        if let format = config.format.dateFormat {
             self.formattert.dateFormat = format
         }
     }

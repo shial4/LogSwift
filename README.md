@@ -7,8 +7,8 @@
 <a href="https://raw.githubusercontent.com/shial4/SLLog/master/LICENSE">
 <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License" />
 </a>
-<a href="https://travis-ci.org/shial4 /SLLog">
-<img src="https://travis-ci.org/shial4 /SLLog.svg?branch=master" alt="TravisCI" />
+<a href="https://travis-ci.org/SLLog/SLLog">
+<img src="https://travis-ci.org/SLLog/SLLog.svg?branch=master" alt="TravisCI" />
 </a>
 <a href="https://codebeat.co/projects/github-com-sllog-sllog-master">
 <img src="https://codebeat.co/badges/34b30a6f-29dd-4870-8f95-922267cef054" alt="Codebeat" />

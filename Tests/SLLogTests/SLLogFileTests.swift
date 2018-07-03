@@ -98,7 +98,7 @@ class SLLogFileTests: XCTestCase {
                     let data = fileHandle.readDataToEndOfFile()
                     fileHandle.closeFile()
                     if let content = String(data: data, encoding: .utf8),
-                        content.components(separatedBy: " ").last == "#%^$&@" {
+                        content.components(separatedBy: " ").last == "#%^$&@}" {
                         exp.fulfill()
                     } else {
                         XCTFail("incorrect message value")

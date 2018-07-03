@@ -48,13 +48,13 @@ public class SLLogFile {
         queue.addOperation { [weak self] in
             guard let path = self?.filePath else { return }
             if FileManager.default.fileExists(atPath: path),
-                let data = "\n{%beging:log%}\(log){%end:log%}".data(using: .utf8) {
+                let data = "\n{%beging:log%}\(log)".data(using: .utf8) {
                 if self?.fileHandle == nil {
                     self?.fileHandle = FileHandle(forWritingAtPath: path)
                 }
                 _ = self?.fileHandle?.seekToEndOfFile()
                 self?.fileHandle?.write(data)
-            } else if let _ = try? "{%beging:log%}\(log){%end:log%}".write(toFile: path, atomically: true, encoding: .utf8) {
+            } else if let _ = try? "{%beging:log%}\(log)".write(toFile: path, atomically: true, encoding: .utf8) {
                 if let file = path.components(separatedBy: "/").last {
                     self?.files.append(file)
                 }

@@ -52,7 +52,7 @@ public class SLLog {
 }
 
 public extension SLLog {
-    public enum LogType: Int, CustomStringConvertible {
+    enum LogType: Int, CustomStringConvertible {
         public var description: String {
             switch self {
             case .verbose:

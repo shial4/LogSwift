@@ -69,8 +69,8 @@ class SLLogFileTests: XCTestCase {
                 if let fileHandle = FileHandle(forReadingAtPath: filePath) {
                     let data = fileHandle.readDataToEndOfFile()
                     fileHandle.closeFile()
-                    if let content = String(data: data, encoding: .utf8),
-                        content.components(separatedBy: .newlines).count == 3 {
+                    if let content = try? JSONDecoder().decode([SLLogFile.LogObject].self, from: data),
+                        content.count == 3 {
                         exp.fulfill()
                     } else {
                         XCTFail("incorrect logs number")
@@ -97,8 +97,8 @@ class SLLogFileTests: XCTestCase {
                 if let fileHandle = FileHandle(forReadingAtPath: filePath) {
                     let data = fileHandle.readDataToEndOfFile()
                     fileHandle.closeFile()
-                    if let content = String(data: data, encoding: .utf8),
-                        content.components(separatedBy: " ").last == "#%^$&@" {
+                    if let content = ((try? JSONDecoder().decode([SLLogFile.LogObject].self, from: data).first) as SLLogFile.LogObject??),
+                        content?.m == "#%^$&@" {
                         exp.fulfill()
                     } else {
                         XCTFail("incorrect message value")

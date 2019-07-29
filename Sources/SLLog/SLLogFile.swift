@@ -9,6 +9,18 @@ import Foundation
 import Dispatch
 
 public class SLLogFile {
+    struct LogObject: Codable {
+        let d: String
+        let t: Int
+        let f: String?
+        let l: UInt?
+        let m: String
+    }
+    
+    private static let comma = ",".data(using: .utf8)!
+    private static let openArray = "[".data(using: .utf8)!
+    private static let closeArray = "]".data(using: .utf8)!
+    
     private let directoryBasename = "/sllogs"
     private let fileExtension = ".log"
     private let dateFormat: DateFormatter = DateFormatter(dateFormat: "yyyy-MM-dd",
@@ -44,24 +56,36 @@ public class SLLogFile {
         queue.cancelAllOperations()
     }
     
-    public func addEntry(_ log: String) {
+    public func addEntry(log: String, level: SLLog.LogType, spot: Occurrence, message: Any) {
         queue.addOperation { [weak self] in
-            guard let path = self?.filePath else { return }
-            if FileManager.default.fileExists(atPath: path),
-                let data = "\n{%beging:log%}\(log)".data(using: .utf8) {
-                if self?.fileHandle == nil {
-                    self?.fileHandle = FileHandle(forWritingAtPath: path)
+            guard let strongSelf = self else { return }
+            guard let path = strongSelf.filePath else { return }
+            do {
+                let data = try strongSelf.buildObject(log: log, level: level, spot: spot, message: message)
+                if FileManager.default.fileExists(atPath: path) {
+                    if strongSelf.fileHandle == nil {
+                        strongSelf.fileHandle = FileHandle(forWritingAtPath: path)
+                    }
+                    if let fileEnd = strongSelf.fileHandle?.seekToEndOfFile() {
+                        strongSelf.fileHandle?.seek(toFileOffset: fileEnd - 1)
+                    }
+                    strongSelf.fileHandle?.write(data + SLLogFile.comma + SLLogFile.closeArray)
+                } else {
+                    if let file = path.components(separatedBy: "/").last {
+                        strongSelf.files.append(file)
+                    }
+                    FileManager.default.createFile(atPath: path, contents: SLLogFile.openArray + data + SLLogFile.comma + SLLogFile.closeArray)
+                    strongSelf.fileHandle?.closeFile()
+                    strongSelf.fileHandle = FileHandle(forWritingAtPath: path)
                 }
-                _ = self?.fileHandle?.seekToEndOfFile()
-                self?.fileHandle?.write(data)
-            } else if let _ = try? "{%beging:log%}\(log)".write(toFile: path, atomically: true, encoding: .utf8) {
-                if let file = path.components(separatedBy: "/").last {
-                    self?.files.append(file)
-                }
-                self?.fileHandle?.closeFile()
-                self?.fileHandle = FileHandle(forWritingAtPath: path)
+            } catch {
+                print(error)
             }
         }
+    }
+    
+    private func buildObject(log: String, level: SLLog.LogType, spot: Occurrence, message: Any) throws -> Data {
+        return try JSONEncoder().encode(LogObject(d: log, t: level.rawValue, f: spot.file, l: spot.line, m: "\(message)"))
     }
     
     private class func verifyDirectory(_ path: String) throws {
@@ -103,6 +127,6 @@ public class SLLogFile {
 
 extension SLLogFile: LogHandler {
     open func handle(log: String, level: SLLog.LogType, spot: Occurrence, message: Any) {
-        addEntry(log)
+        addEntry(log: log, level: level, spot: spot, message: message)
     }
 }

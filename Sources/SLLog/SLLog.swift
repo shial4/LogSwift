@@ -13,7 +13,7 @@ public protocol LogProvider {}
 
 extension LogProvider {
     public func send(level: SLLog.LogType, spot: Occurrence, message: @autoclosure () -> Any) {
-        SLLog.send(level: level, spot: spot, message: message)
+        SLLog.send(level: level, spot: spot, message: message())
     }
 }
 
@@ -78,22 +78,22 @@ public extension SLLog {
 
 public final class Log {
     public class func v(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        SLLog.send(level: .verbose, spot: (file, line), message: message)
+        SLLog.send(level: .verbose, spot: (file, line), message: message())
     }
     
     public class func i(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        SLLog.send(level: .info, spot: (file, line), message: message)
+        SLLog.send(level: .info, spot: (file, line), message: message())
     }
     
     public class func d(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        SLLog.send(level: .debug, spot: (file, line), message: message)
+        SLLog.send(level: .debug, spot: (file, line), message: message())
     }
     
     public class func w(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        SLLog.send(level: .warning, spot: (file, line), message: message)
+        SLLog.send(level: .warning, spot: (file, line), message: message())
     }
     
     public class func e(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        SLLog.send(level: .error, spot: (file, line), message: message)
+        SLLog.send(level: .error, spot: (file, line), message: message())
     }
 }

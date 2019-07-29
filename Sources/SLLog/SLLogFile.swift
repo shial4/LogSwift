@@ -56,27 +56,16 @@ public class SLLogFile {
         queue.cancelAllOperations()
     }
     
-    public func addEntry(log: String, level: SLLog.LogType, spot: Occurrence, message: Any) {
+    public func addEntry(level: SLLog.LogType, occurrence: Occurrence, message: Any) {
         queue.addOperation { [weak self] in
             guard let strongSelf = self else { return }
             guard let path = strongSelf.filePath else { return }
             do {
-                let data = try strongSelf.buildObject(log: log, level: level, spot: spot, message: message)
+                let data = try strongSelf.buildObject(message: message, level: level, occurrence: occurrence)
                 if FileManager.default.fileExists(atPath: path) {
-                    if strongSelf.fileHandle == nil {
-                        strongSelf.fileHandle = FileHandle(forWritingAtPath: path)
-                    }
-                    if let fileEnd = strongSelf.fileHandle?.seekToEndOfFile() {
-                        strongSelf.fileHandle?.seek(toFileOffset: fileEnd - 1)
-                    }
-                    strongSelf.fileHandle?.write(data + SLLogFile.comma + SLLogFile.closeArray)
+                    strongSelf.appendEntry(data, path: path)
                 } else {
-                    if let file = path.components(separatedBy: "/").last {
-                        strongSelf.files.append(file)
-                    }
-                    FileManager.default.createFile(atPath: path, contents: SLLogFile.openArray + data + SLLogFile.comma + SLLogFile.closeArray)
-                    strongSelf.fileHandle?.closeFile()
-                    strongSelf.fileHandle = FileHandle(forWritingAtPath: path)
+                    strongSelf.addFirstEntry(data, path: path)
                 }
             } catch {
                 print(error)
@@ -84,8 +73,27 @@ public class SLLogFile {
         }
     }
     
-    private func buildObject(log: String, level: SLLog.LogType, spot: Occurrence, message: Any) throws -> Data {
-        return try JSONEncoder().encode(LogObject(d: log, t: level.rawValue, f: spot.file, l: spot.line, m: "\(message)"))
+    private func addFirstEntry(_ data: Data, path: String) {
+        if let file = path.components(separatedBy: "/").last {
+            files.append(file)
+        }
+        FileManager.default.createFile(atPath: path, contents: SLLogFile.openArray + data + SLLogFile.comma + SLLogFile.closeArray)
+        fileHandle?.closeFile()
+        fileHandle = FileHandle(forWritingAtPath: path)
+    }
+    
+    private func appendEntry(_ data: Data, path: String) {
+        if fileHandle == nil {
+            fileHandle = FileHandle(forWritingAtPath: path)
+        }
+        if let fileEnd = fileHandle?.seekToEndOfFile() {
+            fileHandle?.seek(toFileOffset: fileEnd - 1)
+        }
+        fileHandle?.write(data + SLLogFile.comma + SLLogFile.closeArray)
+    }
+    
+    private func buildObject(message: Any, level: SLLog.LogType, occurrence: Occurrence) throws -> Data {
+        return try JSONEncoder().encode(LogObject(d: occurrence.UTC, t: level.rawValue, f: occurrence.file, l: occurrence.line, m: "\(message)"))
     }
     
     private class func verifyDirectory(_ path: String) throws {
@@ -126,7 +134,7 @@ public class SLLogFile {
 }
 
 extension SLLogFile: LogHandler {
-    open func handle(log: String, level: SLLog.LogType, spot: Occurrence, message: Any) {
-        addEntry(log: log, level: level, spot: spot, message: message)
+    public func handle(message: Any, level: SLLog.LogType, occurrence: Occurrence) {
+        addEntry(level: level, occurrence: occurrence, message: message)
     }
 }

@@ -82,7 +82,7 @@ You can create your custom log handler. Simply correspond to `LogHandler` protoc
 
 ```swift
 public class MyHandler: LogHandler {
-    open func handle(log: String, level: SLLog.LogType, file: String, line: UInt, message: Any) {
+    open func handle(message: Any, level: SLLog.LogType, file: String, line: UInt) {
         //Do your stuff with log.
     }
 }

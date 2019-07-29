@@ -91,12 +91,12 @@ public class SLLogConsole: LogHandler {
         }
     }
     
-    open func handle(log: String, level: SLLog.LogType, spot: Occurrence, message: Any) {
+    open func handle(message: Any, level: SLLog.LogType, occurrence: Occurrence) {
         guard mode.isDebug || level.rawValue >= minProductionLogType else { return }
         print(logFormat.replacingOccurrences(of: ":d", with: formattert.string(from: Date()))
         .replacingOccurrences(of: ":t", with: applayColors(logColors[level], text: "\(level)"))
-        .replacingOccurrences(of: ":f", with: "\(spot.file.split(separator: "/").last ?? "")")
-        .replacingOccurrences(of: ":l", with: "\(spot.line)")
+        .replacingOccurrences(of: ":f", with: "\(occurrence.file.split(separator: "/").last ?? "")")
+        .replacingOccurrences(of: ":l", with: "\(occurrence.line)")
         .replacingOccurrences(of: ":m", with: "\(message)"))
     }
 }

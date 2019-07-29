@@ -7,18 +7,18 @@
 
 import Foundation
 
-public typealias Occurrence = (file: String, line: UInt)
+public typealias Occurrence = (file: String, line: UInt, UTC: String)
 
 public protocol LogProvider {}
 
 extension LogProvider {
-    public func send(level: SLLog.LogType, spot: Occurrence, message: @autoclosure () -> Any) {
-        SLLog.send(level: level, spot: spot, message: message())
+    public func send(message: @autoclosure () -> Any, level: SLLog.LogType, occurrence: Occurrence) {
+        SLLog.send(message: message(), level: level, occurrence: occurrence)
     }
 }
 
 public protocol LogHandler {
-    func handle(log: String, level: SLLog.LogType, spot: Occurrence, message: Any)
+    func handle(message: Any, level: SLLog.LogType, occurrence: Occurrence)
 }
 
 public class SLLog {
@@ -28,10 +28,9 @@ public class SLLog {
                                                                              timeZone: "UTC",
                                                                              locale: "en_US_POSIX")
     
-    fileprivate class func send(level: SLLog.LogType, spot: Occurrence, message: @autoclosure () -> Any) {
+    fileprivate class func send(message: @autoclosure () -> Any, level: SLLog.LogType, occurrence: Occurrence) {
         let object = message()
-        let log: String = "\(dateFormat.string(from: Date())) \(level) \(spot.file.split(separator: "/").last ?? ""):\(spot.line) - \(object)"
-        targets.forEach { $0.handle(log:log, level: level, spot: spot, message: object) }
+        targets.forEach { $0.handle(message: object, level: level, occurrence: occurrence) }
     }
     
     public class func addHandler(_ target: LogHandler...) {
@@ -78,22 +77,22 @@ public extension SLLog {
 
 public final class Log {
     public class func v(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        SLLog.send(level: .verbose, spot: (file, line), message: message())
+        SLLog.send(message: message(), level: .verbose, occurrence: (file, line, SLLog.dateFormat.string(from: Date())))
     }
     
     public class func i(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        SLLog.send(level: .info, spot: (file, line), message: message())
+        SLLog.send(message: message(), level: .info, occurrence: (file, line, SLLog.dateFormat.string(from: Date())))
     }
     
     public class func d(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        SLLog.send(level: .debug, spot: (file, line), message: message())
+        SLLog.send(message: message(), level: .debug, occurrence: (file, line, SLLog.dateFormat.string(from: Date())))
     }
     
     public class func w(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        SLLog.send(level: .warning, spot: (file, line), message: message())
+        SLLog.send(message: message(), level: .warning, occurrence: (file, line, SLLog.dateFormat.string(from: Date())))
     }
     
     public class func e(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        SLLog.send(level: .error, spot: (file, line), message: message())
+        SLLog.send(message: message(), level: .error, occurrence: (file, line, SLLog.dateFormat.string(from: Date())))
     }
 }

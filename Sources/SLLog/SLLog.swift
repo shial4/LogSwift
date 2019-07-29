@@ -28,7 +28,7 @@ public class SLLog {
                                                                              timeZone: "UTC",
                                                                              locale: "en_US_POSIX")
     
-    fileprivate class func send(message: @autoclosure () -> Any, level: SLLog.LogType, occurrence: Occurrence) {
+    class func send(message: @autoclosure () -> Any, level: SLLog.LogType, occurrence: Occurrence) {
         let object = message()
         targets.forEach { $0.handle(message: object, level: level, occurrence: occurrence) }
     }
@@ -72,27 +72,5 @@ public extension SLLog {
         case debug = 2
         case warning = 3
         case error = 4
-    }
-}
-
-public final class Log {
-    public class func v(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        SLLog.send(message: message(), level: .verbose, occurrence: (file, line, SLLog.dateFormat.string(from: Date())))
-    }
-    
-    public class func i(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        SLLog.send(message: message(), level: .info, occurrence: (file, line, SLLog.dateFormat.string(from: Date())))
-    }
-    
-    public class func d(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        SLLog.send(message: message(), level: .debug, occurrence: (file, line, SLLog.dateFormat.string(from: Date())))
-    }
-    
-    public class func w(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        SLLog.send(message: message(), level: .warning, occurrence: (file, line, SLLog.dateFormat.string(from: Date())))
-    }
-    
-    public class func e(_ message: @autoclosure () -> Any, _ file: String = #file, _ line: UInt = #line) {
-        SLLog.send(message: message(), level: .error, occurrence: (file, line, SLLog.dateFormat.string(from: Date())))
     }
 }

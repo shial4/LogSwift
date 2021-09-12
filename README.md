@@ -1,17 +1,17 @@
 # SLLog
 
 <p align="center">
-<a href="http://swift.org">
-<img src="https://img.shields.io/badge/Swift-5.0-brightgreen.svg" alt="Language" />
+<a href="https://swift.org">
+    <img src="http://img.shields.io/badge/swift-5.2-brightgreen.svg" alt="Swift 5.2">
 </a>
 <a href="https://raw.githubusercontent.com/shial4/SLLog/master/LICENSE">
-<img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License" />
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License" />
 </a>
-<a href="https://travis-ci.org/SLLog/SLLog">
-<img src="https://travis-ci.org/SLLog/SLLog.svg?branch=master" alt="TravisCI" />
+<a href="https://github.com/shial4/LogSwift/actions">
+    <img src="https://github.com/shial4/LogSwift/workflows/test/badge.svg" alt="Continuous Integration">
 </a>
 <a href="https://codebeat.co/projects/github-com-sllog-sllog-master">
-<img src="https://codebeat.co/badges/34b30a6f-29dd-4870-8f95-922267cef054" alt="Codebeat" />
+    <img src="https://codebeat.co/badges/34b30a6f-29dd-4870-8f95-922267cef054" alt="Codebeat" />
 </a>
 </p>
 
